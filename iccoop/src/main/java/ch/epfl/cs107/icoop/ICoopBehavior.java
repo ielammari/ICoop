@@ -20,19 +20,23 @@ public class ICoopBehavior extends AreaBehavior {
     }
 
     public enum ICoopCellType {
-        NULL(0, false),
-        WALL(-16777216, false),
-        IMPASSABLE(-8750470, false),
-        INTERACT(-256, true),
-        DOOR(-195580, true),
-        WALKABLE(-1, true);
+        NULL(0, false, false),
+        WALL(-16777216, false, false),
+        IMPASSABLE(-8750470, false, true),
+        INTERACT(-256, true, true),
+        DOOR(-195580, true, true),
+        WALKABLE(-1, true, true),
+        ROCK(-16777204, true, true),
+        OBSTACLE(-16723187, true, true);
 
         final int type;
-        final boolean isWalkable;
+        final boolean canWalk;
+        final boolean canFly;
 
-        ICoopCellType(int type, boolean isWalkable) {
+        ICoopCellType(int type, boolean canWalk, boolean canFly) {
             this.type = type;
-            this.isWalkable = isWalkable;
+            this.canWalk = canWalk;
+            this.canFly = canFly;
         }
 
         public static ICoopCellType toType(int type) {
@@ -60,7 +64,13 @@ public class ICoopBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
-            return type.isWalkable;
+            if (!type.canWalk) return false;
+            if (entity.takeCellSpace()) {
+                for (Interactable e : entities) {
+                    if (e.takeCellSpace()) return false;
+                }
+            }
+            return true;
         }
 
         @Override
