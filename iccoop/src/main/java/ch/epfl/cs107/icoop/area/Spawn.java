@@ -24,7 +24,7 @@ public final class Spawn extends ICoopArea {
         registerActor(new Background(this));
         registerActor(new Foreground(this));
         registerActor(new Door(this, Orientation.DOWN, Logic.TRUE, "OrbWay",
-                new DiscreteCoordinates(1, 12),
+                new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5),
                 new DiscreteCoordinates(19, 15), new DiscreteCoordinates(19, 16)));
     }
 
