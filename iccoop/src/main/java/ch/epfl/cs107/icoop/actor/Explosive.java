@@ -49,8 +49,8 @@ public class Explosive extends AreaEntity implements Interactor {
         if (state == State.ACTIVE) {
             countdown--;
             int progress = COUNTDOWN_FRAMES - countdown;
-            int speedFactor = Math.max(1, (int) Math.ceil((float) 2*IDLE_FRAME_DURATION * progress / COUNTDOWN_FRAMES));
-            idleAnimation.setSpeedFactor(speedFactor/3);
+            int speedFactor = Math.max(1, (int) Math.ceil((float) 2 * IDLE_FRAME_DURATION * progress / COUNTDOWN_FRAMES));
+            idleAnimation.setSpeedFactor(speedFactor / 3);
             idleAnimation.update(deltaTime);
             if (countdown <= 0) state = State.EXPLODING;
         } else if (state == State.EXPLODING) {
@@ -123,6 +123,11 @@ public class Explosive extends AreaEntity implements Interactor {
     }
 
     private class ExplosiveInteractionHandler implements ICoopInteractionVisitor {
+        @Override
+        public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
+            player.takeDamage(DamageType.PHYSICAL, 2);
+        }
+
         @Override
         public void interactWith(Rock rock, boolean isCellInteraction) {
             rock.destroy();
