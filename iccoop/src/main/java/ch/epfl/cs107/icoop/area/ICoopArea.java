@@ -21,9 +21,15 @@ public abstract class ICoopArea extends Area {
         return true;
     }
 
+    private float currentScaleFactor = DEFAULT_SCALE_FACTOR;
+
+    public void setCurrentScaleFactor(float f) {
+        this.currentScaleFactor = f;
+    }
+
     @Override
-    public final float getCameraScaleFactor() {
-        return DEFAULT_SCALE_FACTOR;
+    public float getCameraScaleFactor() {
+        return currentScaleFactor;
     }
 
     @Override

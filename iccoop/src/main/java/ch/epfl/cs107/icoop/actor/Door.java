@@ -16,16 +16,20 @@ public class Door extends AreaEntity {
 
     private final Logic signal;
     private final String destinationArea;
-    private final DiscreteCoordinates destinationPosition;
+    private final DiscreteCoordinates redDestination;
+    private final DiscreteCoordinates blueDestination;
     private final List<DiscreteCoordinates> cells;
 
     public Door(Area owner, Orientation orientation, Logic signal,
-                String destinationArea, DiscreteCoordinates destinationPosition,
+                String destinationArea,
+                DiscreteCoordinates redDestination,
+                DiscreteCoordinates blueDestination,
                 DiscreteCoordinates... cells) {
         super(owner, orientation, cells[0]);
         this.signal = signal;
         this.destinationArea = destinationArea;
-        this.destinationPosition = destinationPosition;
+        this.redDestination = redDestination;
+        this.blueDestination = blueDestination;
         this.cells = Arrays.asList(cells);
     }
 
@@ -37,8 +41,8 @@ public class Door extends AreaEntity {
         return destinationArea;
     }
 
-    public DiscreteCoordinates getDestinationPosition() {
-        return destinationPosition;
+    public DiscreteCoordinates getDestinationFor(Element element) {
+        return (element == Element.FIRE) ? redDestination : blueDestination;
     }
 
     @Override
