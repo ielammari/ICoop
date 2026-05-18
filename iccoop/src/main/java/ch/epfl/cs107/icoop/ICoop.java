@@ -12,8 +12,12 @@ import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Window;
 
+import ch.epfl.cs107.play.window.Keyboard;
+
 import static ch.epfl.cs107.icoop.KeyBindings.BLUE_PLAYER_KEY_BINDINGS;
 import static ch.epfl.cs107.icoop.KeyBindings.RED_PLAYER_KEY_BINDINGS;
+import static ch.epfl.cs107.icoop.KeyBindings.RESET_AREA;
+import static ch.epfl.cs107.icoop.KeyBindings.RESET_GAME;
 
 public class ICoop extends AreaGame {
 
@@ -33,6 +37,23 @@ public class ICoop extends AreaGame {
         bluePlayer = new ICoopPlayer(area, Orientation.DOWN, area.getBluePlayerSpawnPosition(),
                 BLUE_PLAYER_KEY_BINDINGS, Element.WATER);
         centerOfMass = new CenterOfMass(redPlayer, bluePlayer);
+        redPlayer.enterArea(area, area.getRedPlayerSpawnPosition());
+        bluePlayer.enterArea(area, area.getBluePlayerSpawnPosition());
+        area.setViewCandidate(centerOfMass);
+    }
+
+    private void resetGame() {
+        redPlayer.leaveArea();
+        bluePlayer.leaveArea();
+        createAreas();
+        initArea("Spawn");
+    }
+
+    private void resetArea() {
+        String title = getCurrentArea().getTitle();
+        redPlayer.leaveArea();
+        bluePlayer.leaveArea();
+        ICoopArea area = (ICoopArea) setCurrentArea(title, true);
         redPlayer.enterArea(area, area.getRedPlayerSpawnPosition());
         bluePlayer.enterArea(area, area.getBluePlayerSpawnPosition());
         area.setViewCandidate(centerOfMass);
@@ -75,6 +96,15 @@ public class ICoop extends AreaGame {
 
     @Override
     public void update(float deltaTime) {
+        Keyboard keyboard = getCurrentArea().getKeyboard();
+        if (keyboard.get(RESET_GAME).isPressed()) {
+            resetGame();
+            return;
+        }
+        if (keyboard.get(RESET_AREA).isPressed()) {
+            resetArea();
+            return;
+        }
         processPendingTransitions();
         updateCameraScale();
         super.update(deltaTime);
