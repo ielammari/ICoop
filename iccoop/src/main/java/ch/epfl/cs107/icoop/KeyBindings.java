@@ -14,7 +14,7 @@ import static ch.epfl.cs107.play.window.Keyboard.S;
 import static ch.epfl.cs107.play.window.Keyboard.SPACE;
 import static ch.epfl.cs107.play.window.Keyboard.T;
 import static ch.epfl.cs107.play.window.Keyboard.U;
-import static ch.epfl.cs107.play.window.Keyboard.W;
+import static ch.epfl.cs107.play.window.Keyboard.Z;
 
 /**
  * Interface KeyboardConfig
@@ -25,7 +25,7 @@ public final class KeyBindings {
     /**
      * Keys used for the red player.
      */
-    public static final PlayerKeyBindings RED_PLAYER_KEY_BINDINGS = new PlayerKeyBindings(W, A, S, D, Q, E);
+    public static final PlayerKeyBindings RED_PLAYER_KEY_BINDINGS = new PlayerKeyBindings(Z, Q, S, D, A, E);
 
     /**
      * Touches utilisées pour le joueur bleu.

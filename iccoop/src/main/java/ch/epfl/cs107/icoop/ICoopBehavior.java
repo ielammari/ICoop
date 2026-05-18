@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop;
 
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
@@ -85,6 +86,7 @@ public class ICoopBehavior extends AreaBehavior {
 
         @Override
         public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+            ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
         }
     }
 }
