@@ -128,7 +128,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     @Override
     public boolean wantsViewInteraction() {
-        return getOwnerArea().getKeyboard().get(keys.useItem()).isDown();
+        return getOwnerArea().getKeyboard().get(keys.useItem()).isPressed();
     }
 
     @Override
@@ -146,6 +146,13 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         public void interactWith(Door door, boolean isCellInteraction) {
             if (isCellInteraction && door.getSignal().isOn()) {
                 pendingDoor = door;
+            }
+        }
+
+        @Override
+        public void interactWith(Explosive explosive, boolean isCellInteraction) {
+            if (!isCellInteraction) {
+                explosive.activate();
             }
         }
     }
