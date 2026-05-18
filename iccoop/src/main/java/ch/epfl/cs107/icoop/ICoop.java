@@ -54,6 +54,8 @@ public class ICoop extends AreaGame {
         redPlayer.leaveArea();
         bluePlayer.leaveArea();
         ICoopArea area = (ICoopArea) setCurrentArea(title, true);
+        redPlayer.resetStats();
+        bluePlayer.resetStats();
         redPlayer.enterArea(area, area.getRedPlayerSpawnPosition());
         bluePlayer.enterArea(area, area.getBluePlayerSpawnPosition());
         area.setViewCandidate(centerOfMass);
@@ -96,6 +98,12 @@ public class ICoop extends AreaGame {
 
     @Override
     public void update(float deltaTime) {
+        if (redPlayer.hasPendingAreaReset() || bluePlayer.hasPendingAreaReset()) {
+            redPlayer.consumePendingAreaReset();
+            bluePlayer.consumePendingAreaReset();
+            resetArea();
+            return;
+        }
         Keyboard keyboard = getCurrentArea().getKeyboard();
         if (keyboard.get(RESET_GAME).isPressed()) {
             resetGame();

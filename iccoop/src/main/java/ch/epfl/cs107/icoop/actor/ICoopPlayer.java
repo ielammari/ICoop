@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.engine.actor.OrientedAnimation;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
+import ch.epfl.cs107.play.math.Transform;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
@@ -21,13 +22,18 @@ import java.util.List;
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
 
     private static final int ANIMATION_DURATION = 4;
+    private static final int MAX_LIFE = 5;
+    private static final int IMMUNITY_FRAMES = 24;
 
     private final KeyBindings.PlayerKeyBindings keys;
     private final Element element;
     private final OrientedAnimation animation;
+    private final Health health;
     private final ICoopPlayerInteractionHandler interactionHandler;
 
+    private int immunityCounter;
     private Door pendingDoor;
+    private boolean pendingAreaReset;
 
     public ICoopPlayer(Area owner, Orientation orientation, DiscreteCoordinates coordinates,
                        KeyBindings.PlayerKeyBindings keys, Element element) {
@@ -39,12 +45,29 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.animation = new OrientedAnimation(spriteName, ANIMATION_DURATION, this, Vector.ZERO,
                 new Orientation[]{Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT},
                 4, 1, 2, 16, 32, true);
+        this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
+        this.immunityCounter = 0;
+        this.pendingAreaReset = false;
         resetMotion();
     }
 
-    public boolean hasPendingDoor() {
-        return pendingDoor != null;
+    public void takeDamage(DamageType type, int amount) {
+        if (immunityCounter > 0) return;
+        health.decrease(amount);
+        immunityCounter = IMMUNITY_FRAMES;
+        if (health.isOff()) pendingAreaReset = true;
     }
+
+    public boolean hasPendingAreaReset() { return pendingAreaReset; }
+    public void consumePendingAreaReset() { pendingAreaReset = false; }
+
+    public void resetStats() {
+        health.resetHealth();
+        immunityCounter = 0;
+        pendingAreaReset = false;
+    }
+
+    public boolean hasPendingDoor() { return pendingDoor != null; }
 
     public Door consumePendingDoor() {
         Door d = pendingDoor;
@@ -54,6 +77,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     @Override
     public void update(float deltaTime) {
+        if (immunityCounter > 0) immunityCounter--;
         Keyboard keyboard = getOwnerArea().getKeyboard();
         moveIfPressed(Orientation.UP, keyboard.get(keys.up()));
         moveIfPressed(Orientation.LEFT, keyboard.get(keys.left()));
@@ -69,7 +93,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     @Override
     public void draw(Canvas canvas) {
-        animation.draw(canvas);
+        health.draw(canvas);
+        if (immunityCounter == 0 || immunityCounter % 2 == 0) {
+            animation.draw(canvas);
+        }
     }
 
     private void moveIfPressed(Orientation orientation, Button button) {
@@ -91,24 +118,16 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     @Override
-    public Element element() {
-        return element;
-    }
+    public Element element() { return element; }
 
     @Override
-    public boolean takeCellSpace() {
-        return true;
-    }
+    public boolean takeCellSpace() { return true; }
 
     @Override
-    public boolean isCellInteractable() {
-        return true;
-    }
+    public boolean isCellInteractable() { return true; }
 
     @Override
-    public boolean isViewInteractable() {
-        return true;
-    }
+    public boolean isViewInteractable() { return true; }
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
@@ -122,9 +141,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     @Override
-    public boolean wantsCellInteraction() {
-        return true;
-    }
+    public boolean wantsCellInteraction() { return true; }
 
     @Override
     public boolean wantsViewInteraction() {
