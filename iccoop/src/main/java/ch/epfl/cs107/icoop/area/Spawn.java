@@ -4,12 +4,24 @@ import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.Explosive;
 import ch.epfl.cs107.icoop.actor.Rock;
 import ch.epfl.cs107.play.engine.actor.Background;
+import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 public final class Spawn extends ICoopArea {
+
+    private boolean welcomeShown = false;
+
+    @Override
+    public void update(float deltaTime) {
+        if (!welcomeShown && dialogHandler != null) {
+            dialogHandler.publish(new Dialog("welcome"));
+            welcomeShown = true;
+        }
+        super.update(deltaTime);
+    }
 
     @Override
     public DiscreteCoordinates getRedPlayerSpawnPosition() {

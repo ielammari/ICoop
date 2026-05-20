@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.area;
 
+import ch.epfl.cs107.icoop.DialogHandler;
 import ch.epfl.cs107.icoop.ICoopBehavior;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.io.FileSystem;
@@ -7,6 +8,12 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
 public abstract class ICoopArea extends Area {
+
+    protected DialogHandler dialogHandler;
+
+    public void setDialogHandler(DialogHandler handler) {
+        this.dialogHandler = handler;
+    }
 
     public static final float DEFAULT_SCALE_FACTOR = 13.f;
 
