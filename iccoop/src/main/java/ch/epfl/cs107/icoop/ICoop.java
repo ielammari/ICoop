@@ -12,22 +12,30 @@ import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Window;
 
+import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.window.Keyboard;
 
 import static ch.epfl.cs107.icoop.KeyBindings.BLUE_PLAYER_KEY_BINDINGS;
+import static ch.epfl.cs107.icoop.KeyBindings.NEXT_DIALOG;
 import static ch.epfl.cs107.icoop.KeyBindings.RED_PLAYER_KEY_BINDINGS;
 import static ch.epfl.cs107.icoop.KeyBindings.RESET_AREA;
 import static ch.epfl.cs107.icoop.KeyBindings.RESET_GAME;
 
-public class ICoop extends AreaGame {
+public class ICoop extends AreaGame implements DialogHandler {
+
+    private Dialog activeDialog;
 
     private ICoopPlayer redPlayer;
     private ICoopPlayer bluePlayer;
     private CenterOfMass centerOfMass;
 
     private void createAreas() {
-        addArea(new Spawn());
-        addArea(new OrbWay());
+        Spawn spawn = new Spawn();
+        OrbWay orbWay = new OrbWay();
+        spawn.setDialogHandler(this);
+        orbWay.setDialogHandler(this);
+        addArea(spawn);
+        addArea(orbWay);
     }
 
     private void initArea(String title) {
@@ -43,6 +51,7 @@ public class ICoop extends AreaGame {
     }
 
     private void resetGame() {
+        activeDialog = null;
         redPlayer.leaveArea();
         bluePlayer.leaveArea();
         createAreas();
@@ -50,6 +59,7 @@ public class ICoop extends AreaGame {
     }
 
     private void resetArea() {
+        activeDialog = null;
         String title = getCurrentArea().getTitle();
         redPlayer.leaveArea();
         bluePlayer.leaveArea();
@@ -113,9 +123,32 @@ public class ICoop extends AreaGame {
             resetArea();
             return;
         }
+        if (activeDialog != null) {
+            if (keyboard.get(NEXT_DIALOG).isPressed()) {
+                activeDialog.update(0);
+            }
+            if (activeDialog.isCompleted()) {
+                activeDialog = null;
+            } else {
+                return;
+            }
+        }
         processPendingTransitions();
         updateCameraScale();
         super.update(deltaTime);
+    }
+
+    @Override
+    public void publish(Dialog dialog) {
+        activeDialog = dialog;
+    }
+
+    @Override
+    public void draw() {
+        super.draw();
+        if (activeDialog != null) {
+            activeDialog.draw(getWindow());
+        }
     }
 
     @Override
