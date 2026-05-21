@@ -168,8 +168,17 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(Explosive explosive, boolean isCellInteraction) {
-            if (!isCellInteraction) {
+            if (isCellInteraction) {
+                if (explosive.isInactive()) explosive.collect();
+            } else {
                 explosive.activate();
+            }
+        }
+
+        @Override
+        public void interactWith(ElementalItem item, boolean isCellInteraction) {
+            if (isCellInteraction && item.element() == element) {
+                item.collect();
             }
         }
     }

@@ -1,7 +1,6 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
-import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.area.Area;
@@ -13,10 +12,9 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class Explosive extends AreaEntity implements Interactor {
+public class Explosive extends ICoopCollectable implements Interactor {
 
     private enum State { INACTIVE, ACTIVE, EXPLODING, DONE }
 
@@ -39,6 +37,8 @@ public class Explosive extends AreaEntity implements Interactor {
                 new Vector(0f, 0f), EXPLOSION_FRAME_DURATION, false);
         this.handler = new ExplosiveInteractionHandler();
     }
+
+    public boolean isInactive() { return state == State.INACTIVE; }
 
     public void activate() {
         if (state == State.INACTIVE) state = State.ACTIVE;
@@ -72,11 +72,6 @@ public class Explosive extends AreaEntity implements Interactor {
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
-
-    @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         DiscreteCoordinates pos = getCurrentMainCellCoordinates();
         return Arrays.asList(
@@ -103,19 +98,7 @@ public class Explosive extends AreaEntity implements Interactor {
     }
 
     @Override
-    public boolean takeCellSpace() {
-        return false;
-    }
-
-    @Override
-    public boolean isCellInteractable() {
-        return true;
-    }
-
-    @Override
-    public boolean isViewInteractable() {
-        return true;
-    }
+    public boolean isViewInteractable() { return true; }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {

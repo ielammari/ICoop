@@ -1,6 +1,8 @@
 package ch.epfl.cs107.icoop.area;
 
 import ch.epfl.cs107.icoop.actor.Door;
+import ch.epfl.cs107.icoop.actor.Orb;
+import ch.epfl.cs107.icoop.actor.OrbType;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -33,6 +35,8 @@ public final class OrbWay extends ICoopArea {
                 new DiscreteCoordinates(0, 8), new DiscreteCoordinates(0, 7),
                 new DiscreteCoordinates(0, 6), new DiscreteCoordinates(0, 5),
                 new DiscreteCoordinates(0, 4)));
+        registerActor(new Orb(this, Orientation.DOWN, new DiscreteCoordinates(17, 12), OrbType.FIRE, dialogHandler));
+        registerActor(new Orb(this, Orientation.DOWN, new DiscreteCoordinates(17, 6), OrbType.WATER, dialogHandler));
     }
 
     @Override
