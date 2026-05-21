@@ -27,8 +27,10 @@ public abstract class ElementalWall extends AreaEntity implements ElementalEntit
                             Logic signal, String spriteName) {
         super(owner, orientation, position);
         this.signal = signal;
-        this.sprite = new Sprite(spriteName, 1f, 1f, this,
-                new RegionOfInterest(256, 0, 256, 256), Vector.ZERO);
+        boolean isVertical = (orientation == Orientation.LEFT || orientation == Orientation.RIGHT);
+        RegionOfInterest roi = isVertical ? new RegionOfInterest(256, 0, 256, 256)
+                : new RegionOfInterest(0, 0, 256, 256);
+        this.sprite = new Sprite(spriteName, 1f, 1f, this, roi, Vector.ZERO);
         this.handler = new ElementalWallInteractionHandler();
     }
 

@@ -5,6 +5,7 @@ import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.Element;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.area.Maze;
 import ch.epfl.cs107.icoop.area.OrbWay;
 import ch.epfl.cs107.icoop.area.Spawn;
 import ch.epfl.cs107.play.areagame.AreaGame;
@@ -32,10 +33,12 @@ public class ICoop extends AreaGame implements DialogHandler {
     private void createAreas() {
         Spawn spawn = new Spawn();
         OrbWay orbWay = new OrbWay();
+        Maze maze = new Maze();
         spawn.setDialogHandler(this);
         orbWay.setDialogHandler(this);
         addArea(spawn);
         addArea(orbWay);
+        addArea(maze);
     }
 
     private void initArea(String title) {
