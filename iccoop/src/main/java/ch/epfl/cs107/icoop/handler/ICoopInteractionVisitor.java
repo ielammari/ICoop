@@ -8,6 +8,7 @@ import ch.epfl.cs107.icoop.actor.Explosive;
 import ch.epfl.cs107.icoop.actor.ICoopCollectable;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.actor.Obstacle;
+import ch.epfl.cs107.icoop.actor.PressurePlate;
 import ch.epfl.cs107.icoop.actor.Rock;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 
@@ -21,4 +22,5 @@ public interface ICoopInteractionVisitor extends AreaInteractionVisitor {
     default void interactWith(ICoopCollectable collectable, boolean isCellInteraction) {}
     default void interactWith(ElementalItem item, boolean isCellInteraction) {}
     default void interactWith(ElementalWall wall, boolean isCellInteraction) {}
+    default void interactWith(PressurePlate plate, boolean isCellInteraction) {}
 }
