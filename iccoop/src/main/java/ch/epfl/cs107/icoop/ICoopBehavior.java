@@ -1,5 +1,7 @@
 package ch.epfl.cs107.icoop;
 
+import ch.epfl.cs107.icoop.actor.ElementalEntity;
+import ch.epfl.cs107.icoop.actor.ElementalWall;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
@@ -69,6 +71,15 @@ public class ICoopBehavior extends AreaBehavior {
             if (entity.takeCellSpace()) {
                 for (Interactable e : entities) {
                     if (e.takeCellSpace()) return false;
+                }
+            }
+            for (Interactable e : entities) {
+                if (e instanceof ElementalWall) {
+                    ElementalWall wall = (ElementalWall) e;
+                    if (wall.getSignal().isOn()) {
+                        if (!(entity instanceof ElementalEntity)) return false;
+                        if (((ElementalEntity) entity).element() != wall.element()) return false;
+                    }
                 }
             }
             return true;
