@@ -32,6 +32,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final ICoopPlayerInteractionHandler interactionHandler;
 
     private int immunityCounter;
+    private boolean immuneToFire;
+    private boolean immuneToWater;
     private Door pendingDoor;
     private boolean pendingAreaReset;
 
@@ -47,15 +49,24 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 4, 1, 2, 16, 32, true);
         this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
         this.immunityCounter = 0;
+        this.immuneToFire = false;
+        this.immuneToWater = false;
         this.pendingAreaReset = false;
         resetMotion();
     }
 
     public void takeDamage(DamageType type, int amount) {
         if (immunityCounter > 0) return;
+        if (type == DamageType.FIRE && immuneToFire) return;
+        if (type == DamageType.WATER && immuneToWater) return;
         health.decrease(amount);
         immunityCounter = IMMUNITY_FRAMES;
         if (health.isOff()) pendingAreaReset = true;
+    }
+
+    private void grantImmunity(Element e) {
+        if (e == Element.FIRE) immuneToFire = true;
+        else if (e == Element.WATER) immuneToWater = true;
     }
 
     public boolean hasPendingAreaReset() { return pendingAreaReset; }
@@ -179,7 +190,21 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         public void interactWith(ElementalItem item, boolean isCellInteraction) {
             if (isCellInteraction && item.element() == element) {
                 item.collect();
+                grantImmunity(item.element());
             }
+        }
+
+        @Override
+        public void interactWith(ICoopCollectable collectable, boolean isCellInteraction) {
+            if (isCellInteraction) {
+                collectable.collect();
+                health.increase(1);
+            }
+        }
+
+        @Override
+        public void interactWith(PressurePlate plate, boolean isCellInteraction) {
+            if (isCellInteraction) plate.activate();
         }
     }
 }

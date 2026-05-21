@@ -2,14 +2,17 @@ package ch.epfl.cs107.icoop.area;
 
 import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.FireWall;
+import ch.epfl.cs107.icoop.actor.Heart;
 import ch.epfl.cs107.icoop.actor.Orb;
 import ch.epfl.cs107.icoop.actor.OrbType;
+import ch.epfl.cs107.icoop.actor.PressurePlate;
 import ch.epfl.cs107.icoop.actor.WaterWall;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
+import ch.epfl.cs107.play.signal.logic.Not;
 
 public final class OrbWay extends ICoopArea {
 
@@ -39,12 +42,23 @@ public final class OrbWay extends ICoopArea {
                 new DiscreteCoordinates(0, 4)));
         registerActor(new Orb(this, Orientation.DOWN, new DiscreteCoordinates(17, 12), OrbType.FIRE, dialogHandler));
         registerActor(new Orb(this, Orientation.DOWN, new DiscreteCoordinates(17, 6), OrbType.WATER, dialogHandler));
+
+        PressurePlate firePlate = new PressurePlate(this, Orientation.DOWN, new DiscreteCoordinates(5, 7));
+        PressurePlate waterPlate = new PressurePlate(this, Orientation.DOWN, new DiscreteCoordinates(5, 10));
+        registerActor(firePlate);
+        registerActor(waterPlate);
+
         for (int i = 0; i < 5; i++) {
-            registerActor(new FireWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 10 + i), Logic.TRUE));
-            registerActor(new WaterWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 4 + i), Logic.TRUE));
+            registerActor(new FireWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 10 + i), new Not(firePlate)));
+            registerActor(new WaterWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 4 + i), new Not(waterPlate)));
         }
         registerActor(new WaterWall(this, Orientation.LEFT, new DiscreteCoordinates(7, 12), Logic.TRUE));
         registerActor(new FireWall(this, Orientation.LEFT, new DiscreteCoordinates(7, 6), Logic.TRUE));
+
+        registerActor(new Heart(this, Orientation.DOWN, new DiscreteCoordinates(8, 4)));
+        registerActor(new Heart(this, Orientation.DOWN, new DiscreteCoordinates(10, 6)));
+        registerActor(new Heart(this, Orientation.DOWN, new DiscreteCoordinates(5, 13)));
+        registerActor(new Heart(this, Orientation.DOWN, new DiscreteCoordinates(10, 11)));
     }
 
     @Override
