@@ -36,6 +36,10 @@ public abstract class ElementalWall extends AreaEntity implements ElementalEntit
 
     public Logic getSignal() { return signal; }
 
+    public void destroy() {
+        getOwnerArea().unregisterActor(this);
+    }
+
     protected abstract DamageType damageType();
 
     @Override
@@ -72,7 +76,7 @@ public abstract class ElementalWall extends AreaEntity implements ElementalEntit
     public boolean isCellInteractable() { return true; }
 
     @Override
-    public boolean isViewInteractable() { return false; }
+    public boolean isViewInteractable() { return true; }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {

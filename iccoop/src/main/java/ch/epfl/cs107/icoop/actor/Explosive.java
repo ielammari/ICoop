@@ -115,5 +115,10 @@ public class Explosive extends ICoopCollectable implements Interactor {
         public void interactWith(Rock rock, boolean isCellInteraction) {
             rock.destroy();
         }
+
+        @Override
+        public void interactWith(ElementalWall wall, boolean isCellInteraction) {
+            wall.destroy();
+        }
     }
 }
