@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.handler;
 
+import ch.epfl.cs107.icoop.actor.ICoopItem;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.play.engine.actor.Graphics;
 import ch.epfl.cs107.play.engine.actor.ImageGraphics;
@@ -24,7 +25,6 @@ public class ICoopPlayerStatusGUI implements Graphics {
 
     @Override
     public void draw(Canvas canvas) {
-        // Compute width, height and anchor
         float width = canvas.getTransform().getX().getX();
         float height = canvas.getTransform().getY().getY();
 
@@ -36,8 +36,17 @@ public class ICoopPlayerStatusGUI implements Graphics {
 
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(flipped ? (-width / 2 + 2) : width / 2, height / 2));
 
-        //Draw selected gear
-        ImageGraphics gearDisplay = new ImageGraphics(ResourcePath.getSprite("icoop/gearDisplay"), 1.5f, 1.5f, new RegionOfInterest(0, 0, 32, 32), anchor.add(new Vector(0, height - 1.75f)), 1, DEPTH);
+        Vector gearAnchor = anchor.add(new Vector(0, height - 1.75f));
+        ImageGraphics gearDisplay = new ImageGraphics(ResourcePath.getSprite("icoop/gearDisplay"), 1.5f, 1.5f,
+                new RegionOfInterest(0, 0, 32, 32), gearAnchor, 1, DEPTH);
         gearDisplay.draw(canvas);
+
+        ICoopItem item = player.getCurrentItem();
+        if (item != null) {
+            Vector iconAnchor = gearAnchor.add(new Vector(0.25f, 0.25f));
+            ImageGraphics icon = new ImageGraphics(ResourcePath.getSprite(item.getIconName()), 1f, 1f,
+                    new RegionOfInterest(0, 0, item.getIconW(), item.getIconH()), iconAnchor, 1, DEPTH + 1);
+            icon.draw(canvas);
+        }
     }
 }
