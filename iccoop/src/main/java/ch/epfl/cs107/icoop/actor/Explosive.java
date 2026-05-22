@@ -112,6 +112,11 @@ public class Explosive extends ICoopCollectable implements Interactor {
         }
 
         @Override
+        public void interactWith(Foe foe, boolean isCellInteraction) {
+            foe.takeDamage(DamageType.PHYSICAL, 2);
+        }
+
+        @Override
         public void interactWith(Rock rock, boolean isCellInteraction) {
             rock.destroy();
         }

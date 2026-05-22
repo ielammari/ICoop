@@ -279,5 +279,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         public void interactWith(PressurePlate plate, boolean isCellInteraction) {
             if (isCellInteraction) plate.activate();
         }
+
+        @Override
+        public void interactWith(Foe foe, boolean isCellInteraction) {
+            if (isCellInteraction) foe.dealContactDamageTo(ICoopPlayer.this);
+        }
     }
 }
