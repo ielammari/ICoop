@@ -54,6 +54,8 @@ public abstract class Foe extends MovableAreaEntity {
 
     protected boolean isAlive() { return state == State.ALIVE; }
 
+    protected boolean isImmune() { return immunityCounter > 0; }
+
     protected boolean displaysHealthBar() { return true; }
 
     @Override
