@@ -2,17 +2,26 @@ package ch.epfl.cs107.icoop.area;
 
 import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.Explosive;
+import ch.epfl.cs107.icoop.actor.ManorDoor;
 import ch.epfl.cs107.icoop.actor.Rock;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
+import ch.epfl.cs107.play.signal.logic.And;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 public final class Spawn extends ICoopArea {
 
     private boolean welcomeShown = false;
+    private Logic mazeChallenge = Logic.FALSE;
+    private Logic arenaChallenge = Logic.FALSE;
+
+    public void setChallenges(Logic mazeChallenge, Logic arenaChallenge) {
+        this.mazeChallenge = mazeChallenge;
+        this.arenaChallenge = arenaChallenge;
+    }
 
     @Override
     public void update(float deltaTime) {
@@ -45,6 +54,8 @@ public final class Spawn extends ICoopArea {
                 new DiscreteCoordinates(4, 0), new DiscreteCoordinates(5, 0)));
         registerActor(new Rock(this, Orientation.DOWN, new DiscreteCoordinates(10, 10)));
         registerActor(new Explosive(this, Orientation.DOWN, new DiscreteCoordinates(11, 10)));
+        registerActor(new ManorDoor(this, Orientation.DOWN, new DiscreteCoordinates(6, 11),
+                new And(mazeChallenge, arenaChallenge), dialogHandler));
     }
 
     @Override

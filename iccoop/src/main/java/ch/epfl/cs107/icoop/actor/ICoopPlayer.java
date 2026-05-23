@@ -357,5 +357,19 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 foe.takeDamage(DamageType.PHYSICAL, 1);
             }
         }
+
+        @Override
+        public void interactWith(Key key, boolean isCellInteraction) {
+            if (isCellInteraction && key.element() == element) {
+                key.collect();
+                inventory.addPocketItem(key.getInventoryItem(), 1);
+                updateCurrentItem();
+            }
+        }
+
+        @Override
+        public void interactWith(ManorDoor manorDoor, boolean isCellInteraction) {
+            if (isCellInteraction) manorDoor.onContact();
+        }
     }
 }
