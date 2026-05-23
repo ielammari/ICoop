@@ -33,7 +33,7 @@ public abstract class Foe extends MovableAreaEntity {
     protected Foe(Area owner, Orientation orientation, DiscreteCoordinates position,
                   int maxHP, List<DamageType> vulnerabilities) {
         super(owner, orientation, position);
-        this.health = new Health(this, Transform.I.translated(0, 1f), maxHP, false);
+        this.health = new Health(this, Transform.I.translated(0, 1.6f), maxHP, false);
         this.vulnerabilities = vulnerabilities;
         Sprite[] vanishSprites = RPGSprite.extractSprites("icoop/vanish", VANISH_FRAME_COUNT, 2f, 2f, this, new Vector(-0.5f, -0.5f), 32, 32);
         this.vanishAnimation = new Animation(VANISH_FRAME_DURATION, vanishSprites, false);
@@ -81,7 +81,7 @@ public abstract class Foe extends MovableAreaEntity {
             vanishAnimation.draw(canvas);
         } else if (state == State.ALIVE) {
             if (displaysHealthBar()) health.draw(canvas);
-            drawAlive(canvas);
+            if (immunityCounter == 0 || immunityCounter % 2 == 0) drawAlive(canvas);
         }
     }
 

@@ -25,7 +25,11 @@ import java.util.List;
 
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor, Inventory.Holder {
 
+    private enum PlayerState { IDLE, SWORD_ATTACK, STAFF_ATTACK }
+
     private static final int ANIMATION_DURATION = 4;
+    private static final int SWORD_ANIMATION_DURATION = 2;
+    private static final int STAFF_ANIMATION_DURATION = 2;
     private static final int MAX_LIFE = 5;
     private static final int IMMUNITY_FRAMES = 24;
     private static final ICoopItem[] ITEM_ORDER = ICoopItem.values();
@@ -33,6 +37,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final KeyBindings.PlayerKeyBindings keys;
     private final Element element;
     private final OrientedAnimation animation;
+    private final OrientedAnimation swordAnimation;
+    private final OrientedAnimation staffAnimation;
     private final Health health;
     private final ICoopPlayerInteractionHandler interactionHandler;
     private final ICoopInventory inventory;
@@ -44,6 +50,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private Door pendingDoor;
     private boolean pendingAreaReset;
     private ICoopItem currentItem;
+    private PlayerState playerState;
 
     public ICoopPlayer(Area owner, Orientation orientation, DiscreteCoordinates coordinates,
                        KeyBindings.PlayerKeyBindings keys, Element element) {
@@ -55,6 +62,15 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.animation = new OrientedAnimation(spriteName, ANIMATION_DURATION, this, Vector.ZERO,
                 new Orientation[]{Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT},
                 4, 1, 2, 16, 32, true);
+        this.swordAnimation = new OrientedAnimation(spriteName + ".sword", SWORD_ANIMATION_DURATION, this,
+                new Vector(-0.5f, 0f),
+                new Orientation[]{Orientation.DOWN, Orientation.UP, Orientation.RIGHT, Orientation.LEFT},
+                4, 2, 2, 32, 32);
+        String staffSprite = (element == Element.FIRE) ? "icoop/player.staff_fire" : "icoop/player2.staff_water";
+        this.staffAnimation = new OrientedAnimation(staffSprite, STAFF_ANIMATION_DURATION, this,
+                new Vector(-0.5f, -0.20f),
+                new Orientation[]{Orientation.DOWN, Orientation.UP, Orientation.RIGHT, Orientation.LEFT},
+                4, 2, 2, 32, 32);
         this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
         this.immunityCounter = 0;
         this.immuneToFire = false;
@@ -65,6 +81,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         inventory.addPocketItem(ICoopItem.EXPLOSIVE, 3);
         this.currentItem = ICoopItem.SWORD;
         this.gui = new ICoopPlayerStatusGUI(this, element == Element.WATER);
+        this.playerState = PlayerState.IDLE;
         resetMotion();
     }
 
@@ -96,6 +113,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         health.resetHealth();
         immunityCounter = 0;
         pendingAreaReset = false;
+        playerState = PlayerState.IDLE;
+        swordAnimation.reset();
+        staffAnimation.reset();
     }
 
     public boolean hasPendingDoor() { return pendingDoor != null; }
@@ -133,41 +153,68 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public void update(float deltaTime) {
         if (immunityCounter > 0) immunityCounter--;
         Keyboard keyboard = getOwnerArea().getKeyboard();
-        moveIfPressed(Orientation.UP, keyboard.get(keys.up()));
-        moveIfPressed(Orientation.LEFT, keyboard.get(keys.left()));
-        moveIfPressed(Orientation.DOWN, keyboard.get(keys.down()));
-        moveIfPressed(Orientation.RIGHT, keyboard.get(keys.right()));
-        if (isDisplacementOccurs()) {
-            animation.update(deltaTime);
-        } else {
-            animation.reset();
-        }
-        updateCurrentItem();
-        if (keyboard.get(keys.switchItem()).isPressed()) {
-            cycleToNextItem();
-        }
-        if (keyboard.get(keys.useItem()).isPressed() && currentItem == ICoopItem.EXPLOSIVE) {
-            Orientation cur = getOrientation();
-            Orientation[] ALL = Orientation.values();
-            Orientation[] tryOrder = {
-                    cur,
-                    ALL[(cur.ordinal() + 1) % 4],
-                    ALL[(cur.ordinal() + 3) % 4],
-                    ALL[(cur.ordinal() + 2) % 4]
-            };
-            DiscreteCoordinates myCell = getCurrentMainCellCoordinates();
-            for (Orientation dir : tryOrder) {
-                DiscreteCoordinates target = myCell.jump(dir.toVector());
-                Explosive exp = new Explosive(getOwnerArea(), cur, target);
-                if (getOwnerArea().canEnterAreaCells(exp, Collections.singletonList(target))) {
-                    getOwnerArea().registerActor(exp);
-                    exp.activate();
-                    inventory.removePocketItem(ICoopItem.EXPLOSIVE, 1);
-                    updateCurrentItem();
-                    break;
+
+        if (playerState == PlayerState.IDLE) {
+            moveIfPressed(Orientation.UP, keyboard.get(keys.up()));
+            moveIfPressed(Orientation.LEFT, keyboard.get(keys.left()));
+            moveIfPressed(Orientation.DOWN, keyboard.get(keys.down()));
+            moveIfPressed(Orientation.RIGHT, keyboard.get(keys.right()));
+            if (isDisplacementOccurs()) {
+                animation.update(deltaTime);
+            } else {
+                animation.reset();
+            }
+            updateCurrentItem();
+            if (keyboard.get(keys.switchItem()).isPressed()) {
+                cycleToNextItem();
+            }
+            if (keyboard.get(keys.useItem()).isPressed()) {
+                if (currentItem == ICoopItem.SWORD) {
+                    playerState = PlayerState.SWORD_ATTACK;
+                    swordAnimation.reset();
+                } else if (currentItem == ICoopItem.FIRE_STAFF || currentItem == ICoopItem.WATER_STAFF) {
+                    playerState = PlayerState.STAFF_ATTACK;
+                    staffAnimation.reset();
+                } else if (currentItem == ICoopItem.EXPLOSIVE) {
+                    Orientation cur = getOrientation();
+                    Orientation[] ALL = Orientation.values();
+                    Orientation[] tryOrder = {
+                            cur,
+                            ALL[(cur.ordinal() + 1) % 4],
+                            ALL[(cur.ordinal() + 3) % 4],
+                            ALL[(cur.ordinal() + 2) % 4]
+                    };
+                    DiscreteCoordinates myCell = getCurrentMainCellCoordinates();
+                    for (Orientation dir : tryOrder) {
+                        DiscreteCoordinates target = myCell.jump(dir.toVector());
+                        Explosive exp = new Explosive(getOwnerArea(), cur, target);
+                        if (getOwnerArea().canEnterAreaCells(exp, Collections.singletonList(target))) {
+                            getOwnerArea().registerActor(exp);
+                            exp.activate();
+                            inventory.removePocketItem(ICoopItem.EXPLOSIVE, 1);
+                            updateCurrentItem();
+                            break;
+                        }
+                    }
                 }
             }
+        } else if (playerState == PlayerState.SWORD_ATTACK) {
+            swordAnimation.update(deltaTime);
+            if (swordAnimation.isCompleted()) {
+                playerState = PlayerState.IDLE;
+                swordAnimation.reset();
+            }
+        } else if (playerState == PlayerState.STAFF_ATTACK) {
+            staffAnimation.update(deltaTime);
+            if (staffAnimation.isCompleted()) {
+                DiscreteCoordinates ahead = getCurrentMainCellCoordinates().jump(getOrientation().toVector());
+                MagicProjectile ball = new MagicProjectile(getOwnerArea(), getOrientation(), ahead, element);
+                getOwnerArea().registerActor(ball);
+                playerState = PlayerState.IDLE;
+                staffAnimation.reset();
+            }
         }
+
         super.update(deltaTime);
     }
 
@@ -175,7 +222,13 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public void draw(Canvas canvas) {
         health.draw(canvas);
         if (immunityCounter == 0 || immunityCounter % 2 == 0) {
-            animation.draw(canvas);
+            if (playerState == PlayerState.SWORD_ATTACK) {
+                swordAnimation.draw(canvas);
+            } else if (playerState == PlayerState.STAFF_ATTACK) {
+                staffAnimation.draw(canvas);
+            } else {
+                animation.draw(canvas);
+            }
         }
         gui.draw(canvas);
     }
@@ -226,8 +279,15 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     @Override
     public boolean wantsViewInteraction() {
-        return currentItem != ICoopItem.EXPLOSIVE
-                && getOwnerArea().getKeyboard().get(keys.useItem()).isPressed();
+        if (playerState == PlayerState.SWORD_ATTACK) return true;
+        if (playerState == PlayerState.IDLE) {
+            return currentItem != ICoopItem.EXPLOSIVE
+                    && currentItem != ICoopItem.SWORD
+                    && currentItem != ICoopItem.FIRE_STAFF
+                    && currentItem != ICoopItem.WATER_STAFF
+                    && getOwnerArea().getKeyboard().get(keys.useItem()).isPressed();
+        }
+        return false;
     }
 
     @Override
@@ -268,6 +328,15 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
 
         @Override
+        public void interactWith(Staff staff, boolean isCellInteraction) {
+            if (isCellInteraction && staff.element() == element) {
+                staff.collect();
+                inventory.addPocketItem(staff.getInventoryItem(), 1);
+                updateCurrentItem();
+            }
+        }
+
+        @Override
         public void interactWith(ICoopCollectable collectable, boolean isCellInteraction) {
             if (isCellInteraction) {
                 collectable.collect();
@@ -282,7 +351,11 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(Foe foe, boolean isCellInteraction) {
-            if (isCellInteraction) foe.dealContactDamageTo(ICoopPlayer.this);
+            if (isCellInteraction) {
+                foe.dealContactDamageTo(ICoopPlayer.this);
+            } else if (playerState == PlayerState.SWORD_ATTACK) {
+                foe.takeDamage(DamageType.PHYSICAL, 1);
+            }
         }
     }
 }

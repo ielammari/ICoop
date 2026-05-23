@@ -9,9 +9,11 @@ import ch.epfl.cs107.icoop.actor.Fire;
 import ch.epfl.cs107.icoop.actor.Foe;
 import ch.epfl.cs107.icoop.actor.ICoopCollectable;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
+import ch.epfl.cs107.icoop.actor.MagicProjectile;
 import ch.epfl.cs107.icoop.actor.Obstacle;
 import ch.epfl.cs107.icoop.actor.PressurePlate;
 import ch.epfl.cs107.icoop.actor.Rock;
+import ch.epfl.cs107.icoop.actor.Staff;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 
 public interface ICoopInteractionVisitor extends AreaInteractionVisitor {
@@ -27,4 +29,6 @@ public interface ICoopInteractionVisitor extends AreaInteractionVisitor {
     default void interactWith(PressurePlate plate, boolean isCellInteraction) {}
     default void interactWith(Foe foe, boolean isCellInteraction) {}
     default void interactWith(Fire fire, boolean isCellInteraction) {}
+    default void interactWith(Staff staff, boolean isCellInteraction) {}
+    default void interactWith(MagicProjectile mp, boolean isCellInteraction) {}
 }
