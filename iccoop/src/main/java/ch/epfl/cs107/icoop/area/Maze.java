@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.area;
 
 import ch.epfl.cs107.icoop.actor.BombFoe;
+import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.Element;
 import ch.epfl.cs107.icoop.actor.Explosive;
 import ch.epfl.cs107.icoop.actor.Staff;
@@ -15,8 +16,12 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.signal.logic.Not;
+import ch.epfl.cs107.play.signal.logic.Or;
 
-public final class Maze extends ICoopArea {
+public final class Maze extends ICoopArea implements Logic {
+
+    private Staff fireStaff;
+    private Staff waterStaff;
 
     @Override
     public DiscreteCoordinates getRedPlayerSpawnPosition() {
@@ -70,8 +75,14 @@ public final class Maze extends ICoopArea {
                     new DiscreteCoordinates(pos[0], pos[1])));
         }
 
-        registerActor(new Staff(this, Orientation.DOWN, new DiscreteCoordinates(13, 2), Element.FIRE));
-        registerActor(new Staff(this, Orientation.DOWN, new DiscreteCoordinates(8, 2), Element.WATER));
+        fireStaff = new Staff(this, Orientation.DOWN, new DiscreteCoordinates(13, 2), Element.FIRE);
+        waterStaff = new Staff(this, Orientation.DOWN, new DiscreteCoordinates(8, 2), Element.WATER);
+        registerActor(fireStaff);
+        registerActor(waterStaff);
+
+        registerActor(new Door(this, Orientation.DOWN, new Or(fireStaff, waterStaff), "Arena",
+                new DiscreteCoordinates(4, 5), new DiscreteCoordinates(14, 15),
+                new DiscreteCoordinates(19, 6), new DiscreteCoordinates(19, 7)));
 
         int[][] bombFoePositions = {
                 {5, 15}, {4, 10}, {5, 12}, {10, 17}, {5, 14}
@@ -79,6 +90,16 @@ public final class Maze extends ICoopArea {
         for (int[] pos : bombFoePositions) {
             registerActor(new BombFoe(this, new DiscreteCoordinates(pos[0], pos[1])));
         }
+    }
+
+    @Override
+    public boolean isOn() {
+        return fireStaff != null && waterStaff != null && fireStaff.isOn() && waterStaff.isOn();
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isOn();
     }
 
     @Override

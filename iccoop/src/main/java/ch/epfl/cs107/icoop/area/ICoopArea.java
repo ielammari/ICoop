@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.window.Window;
 public abstract class ICoopArea extends Area {
 
     protected DialogHandler dialogHandler;
+    protected ICoopBehavior behavior;
 
     public void setDialogHandler(DialogHandler handler) {
         this.dialogHandler = handler;
@@ -42,7 +43,8 @@ public abstract class ICoopArea extends Area {
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
-            setBehavior(new ICoopBehavior(window, getTitle()));
+            behavior = new ICoopBehavior(window, getTitle());
+            setBehavior(behavior);
             createArea();
             return true;
         }

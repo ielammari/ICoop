@@ -7,7 +7,11 @@ import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ICoopBehavior extends AreaBehavior {
 
@@ -21,6 +25,18 @@ public class ICoopBehavior extends AreaBehavior {
                 setCell(x, y, new ICoopCell(x, y, color));
             }
         }
+    }
+
+    public List<DiscreteCoordinates> cellsOfType(ICoopCellType wanted) {
+        List<DiscreteCoordinates> result = new ArrayList<>();
+        for (int x = 0; x < getWidth(); x++) {
+            for (int y = 0; y < getHeight(); y++) {
+                if (((ICoopCell) getCell(x, y)).type == wanted) {
+                    result.add(new DiscreteCoordinates(x, y));
+                }
+            }
+        }
+        return result;
     }
 
     public enum ICoopCellType {
