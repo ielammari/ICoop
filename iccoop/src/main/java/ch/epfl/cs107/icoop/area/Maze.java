@@ -1,7 +1,9 @@
 package ch.epfl.cs107.icoop.area;
 
 import ch.epfl.cs107.icoop.actor.BombFoe;
+import ch.epfl.cs107.icoop.actor.Element;
 import ch.epfl.cs107.icoop.actor.Explosive;
+import ch.epfl.cs107.icoop.actor.Staff;
 import ch.epfl.cs107.icoop.actor.FireWall;
 import ch.epfl.cs107.icoop.actor.Heart;
 import ch.epfl.cs107.icoop.actor.HellSkull;
@@ -67,6 +69,9 @@ public final class Maze extends ICoopArea {
             registerActor(new HellSkull(this, Orientation.RIGHT,
                     new DiscreteCoordinates(pos[0], pos[1])));
         }
+
+        registerActor(new Staff(this, Orientation.DOWN, new DiscreteCoordinates(13, 2), Element.FIRE));
+        registerActor(new Staff(this, Orientation.DOWN, new DiscreteCoordinates(8, 2), Element.WATER));
 
         int[][] bombFoePositions = {
                 {5, 15}, {4, 10}, {5, 12}, {10, 17}, {5, 14}

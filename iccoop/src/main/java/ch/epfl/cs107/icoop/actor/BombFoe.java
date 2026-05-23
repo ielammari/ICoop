@@ -24,14 +24,14 @@ public class BombFoe extends Foe implements Interactor {
 
     private enum State { IDLE, ATTACK, PROTECT, VULNERABLE }
 
-    private static final int MAX_HP = 2;
+    private static final int MAX_HP = 3;
     private static final int ANIMATION_DURATION = 24;
     private static final int ANIMATION_FRAME_DURATION = ANIMATION_DURATION / 3;
     private static final int NB_FRAMES = 4;
     private static final int FRAME_SIZE = 32;
 
     private static final int NORMAL_SPEED = 2;
-    private static final int FAST_SPEED = 6;
+    private static final int FAST_SPEED = 5;
     private static final int SLOW_SPEED = 1;
 
     private static final int MAX_INACTION = 24;
@@ -55,13 +55,13 @@ public class BombFoe extends Foe implements Interactor {
     public BombFoe(Area owner, DiscreteCoordinates position) {
         super(owner, Orientation.DOWN, position, MAX_HP,
                 Arrays.asList(DamageType.PHYSICAL, DamageType.FIRE));
-        Vector anchor = new Vector(-0.5f, 0f);
+        Vector anchor = new Vector(-0.25f, 0f);
         int[] columnForOrientation = {2, 3, 0, 1};
         this.animation = buildOrientedAnimation("icoop/bombMonster", anchor, columnForOrientation,
                 ANIMATION_FRAME_DURATION, true);
         Sprite[] protectFrames = new Sprite[NB_FRAMES];
         for (int f = 0; f < NB_FRAMES; f++) {
-            protectFrames[f] = new RPGSprite("icoop/bombMonster.protecting", 2f, 2f, this,
+            protectFrames[f] = new RPGSprite("icoop/bombMonster.protecting", 1.7f, 1.7f, this,
                     new RegionOfInterest(0, f * FRAME_SIZE, FRAME_SIZE, FRAME_SIZE), anchor);
         }
         this.protectingAnimation = new Animation(ANIMATION_FRAME_DURATION, protectFrames, true);
@@ -79,7 +79,7 @@ public class BombFoe extends Foe implements Interactor {
         for (Orientation o : Orientation.values()) {
             int column = columnForOrientation[o.ordinal()];
             for (int f = 0; f < NB_FRAMES; f++) {
-                sprites[o.ordinal()][f] = new RPGSprite(name, 2f, 2f, this,
+                sprites[o.ordinal()][f] = new RPGSprite(name, 1.7f, 1.7f, this,
                         new RegionOfInterest(column * FRAME_SIZE, f * FRAME_SIZE, FRAME_SIZE, FRAME_SIZE), anchor);
             }
         }

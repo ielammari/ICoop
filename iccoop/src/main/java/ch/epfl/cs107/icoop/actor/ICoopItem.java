@@ -6,7 +6,7 @@ public enum ICoopItem implements InventoryItem {
     SWORD("icoop/sword.icon", 16, 16),
     FIRE_KEY("icoop/key_red", 16, 16),
     WATER_KEY("icoop/key_blue", 16, 16),
-    FIRE_STAFF("icoop/staff_fire", 32, 32),
+    FIRE_STAFF("icoop/staff_fire.icon", 16, 16),
     WATER_STAFF("icoop/staff_water.icon", 16, 16),
     EXPLOSIVE("icoop/explosive", 16, 16);
 
