@@ -8,7 +8,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Heart extends ICoopCollectable {
+public final class Heart extends ICoopCollectable {
 
     private static final int FRAME_COUNT = 4;
     private static final int FRAME_DURATION = 6;

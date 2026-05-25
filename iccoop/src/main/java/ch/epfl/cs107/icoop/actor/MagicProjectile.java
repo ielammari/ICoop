@@ -16,7 +16,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class MagicProjectile extends MovableAreaEntity implements Unstoppable, Interactor {
+public final class MagicProjectile extends MovableAreaEntity implements Unstoppable, Interactor {
 
     private static final int ANIMATION_DURATION = 12;
     private static final int NB_FRAMES = 4;

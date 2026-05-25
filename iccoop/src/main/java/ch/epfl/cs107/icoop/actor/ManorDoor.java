@@ -14,7 +14,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class ManorDoor extends AreaEntity {
+public final class ManorDoor extends AreaEntity {
 
     private final Logic signal;
     private final DialogHandler dialogHandler;

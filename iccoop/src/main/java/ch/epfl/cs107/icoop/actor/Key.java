@@ -9,7 +9,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Key extends ElementalItem {
+public final class Key extends ElementalItem {
 
     private final Sprite sprite;
     private final ICoopItem inventoryItem;

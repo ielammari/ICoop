@@ -7,6 +7,7 @@ import ch.epfl.cs107.icoop.actor.Obstacle;
 import ch.epfl.cs107.icoop.actor.Rock;
 import ch.epfl.cs107.icoop.actor.Teleporter;
 import ch.epfl.cs107.play.engine.actor.Background;
+import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
@@ -17,6 +18,16 @@ public final class Arena extends ICoopArea implements Logic {
 
     private Key redKey;
     private Key blueKey;
+    private boolean lifeForLifeShown = false;
+
+    @Override
+    public void update(float deltaTime) {
+        if (!lifeForLifeShown && dialogHandler != null) {
+            dialogHandler.publish(new Dialog("life_for_life"));
+            lifeForLifeShown = true;
+        }
+        super.update(deltaTime);
+    }
 
     @Override
     public DiscreteCoordinates getRedPlayerSpawnPosition() {

@@ -38,6 +38,7 @@ public class ICoop extends AreaGame implements DialogHandler {
         Arena arena = new Arena();
         spawn.setDialogHandler(this);
         orbWay.setDialogHandler(this);
+        arena.setDialogHandler(this);
         spawn.setChallenges(maze, arena);
         addArea(spawn);
         addArea(orbWay);

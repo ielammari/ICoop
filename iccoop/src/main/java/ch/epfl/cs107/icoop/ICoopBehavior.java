@@ -13,7 +13,7 @@ import ch.epfl.cs107.play.window.Window;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ICoopBehavior extends AreaBehavior {
+public final class ICoopBehavior extends AreaBehavior {
 
     public ICoopBehavior(Window window, String name) {
         super(window, name);
@@ -64,12 +64,11 @@ public class ICoopBehavior extends AreaBehavior {
                 if (ict.type == type)
                     return ict;
             }
-            System.out.println(type);
             return NULL;
         }
     }
 
-    public class ICoopCell extends Cell {
+    public final class ICoopCell extends Cell {
         private final ICoopCellType type;
 
         public ICoopCell(int x, int y, ICoopCellType type) {
@@ -88,7 +87,7 @@ public class ICoopBehavior extends AreaBehavior {
             if (!type.canWalk) return false;
             if (entity.takeCellSpace()) {
                 for (Interactable e : entities) {
-                    if (e.takeCellSpace()) return false;
+                    if (e != entity && e.takeCellSpace()) return false;
                 }
             }
             for (Interactable e : entities) {

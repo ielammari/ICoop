@@ -8,7 +8,7 @@ import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Teleporter extends Door {
+public final class Teleporter extends Door {
 
     private final Sprite sprite;
 
