@@ -1,4 +1,4 @@
 <strings id="welcome">
-    <string name="game_name">Vous êtes arrivés jusqu'ici, bien joué.</string>
-    <string name="game_name">Mais arriverez-vous à sortir de l'arène ?</string>
+    <string name="game_name">You've made it this far, well done.</string>
+    <string name="game_name">But will you manage to get out of the arena ?</string>
 </strings>
