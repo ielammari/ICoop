@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class BombFoe extends Foe implements Interactor {
+public final class BombFoe extends Foe implements Interactor {
 
     private enum State { IDLE, ATTACK, PROTECT, VULNERABLE }
 

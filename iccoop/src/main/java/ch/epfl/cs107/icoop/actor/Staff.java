@@ -12,7 +12,7 @@ import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Staff extends ElementalItem {
+public final class Staff extends ElementalItem {
 
     private static final int ANIMATION_DURATION = 32;
     private static final int NB_FRAMES = 8;

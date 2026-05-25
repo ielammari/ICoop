@@ -1,15 +1,6 @@
 package ch.epfl.cs107.icoop.area;
 
-import ch.epfl.cs107.icoop.actor.BombFoe;
-import ch.epfl.cs107.icoop.actor.Door;
-import ch.epfl.cs107.icoop.actor.Element;
-import ch.epfl.cs107.icoop.actor.Explosive;
-import ch.epfl.cs107.icoop.actor.Staff;
-import ch.epfl.cs107.icoop.actor.FireWall;
-import ch.epfl.cs107.icoop.actor.Heart;
-import ch.epfl.cs107.icoop.actor.HellSkull;
-import ch.epfl.cs107.icoop.actor.PressurePlate;
-import ch.epfl.cs107.icoop.actor.WaterWall;
+import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -74,6 +65,9 @@ public final class Maze extends ICoopArea implements Logic {
             registerActor(new HellSkull(this, Orientation.RIGHT,
                     new DiscreteCoordinates(pos[0], pos[1])));
         }
+
+        registerActor(new Rock(this, Orientation.DOWN, new DiscreteCoordinates(17, 7)));
+        registerActor(new Rock(this, Orientation.DOWN, new DiscreteCoordinates(17, 6)));
 
         fireStaff = new Staff(this, Orientation.DOWN, new DiscreteCoordinates(13, 2), Element.FIRE);
         waterStaff = new Staff(this, Orientation.DOWN, new DiscreteCoordinates(8, 2), Element.WATER);

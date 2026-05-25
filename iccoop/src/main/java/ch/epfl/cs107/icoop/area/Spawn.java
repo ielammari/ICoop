@@ -52,8 +52,13 @@ public final class Spawn extends ICoopArea {
         registerActor(new Door(this, Orientation.DOWN, Logic.TRUE, "Maze",
                 new DiscreteCoordinates(2, 39), new DiscreteCoordinates(3, 39),
                 new DiscreteCoordinates(4, 0), new DiscreteCoordinates(5, 0)));
-        registerActor(new Rock(this, Orientation.DOWN, new DiscreteCoordinates(10, 10)));
-        registerActor(new Explosive(this, Orientation.DOWN, new DiscreteCoordinates(11, 10)));
+        registerActor(new Rock(this, Orientation.DOWN, new DiscreteCoordinates(5, 4)));
+        registerActor(new Rock(this, Orientation.DOWN, new DiscreteCoordinates(4, 4)));
+        registerActor(new Rock(this, Orientation.DOWN, new DiscreteCoordinates(6, 5)));
+        registerActor(new Rock(this, Orientation.DOWN, new DiscreteCoordinates(5, 5)));
+        registerActor(new Explosive(this, Orientation.DOWN, new DiscreteCoordinates(4, 10)));
+        registerActor(new Explosive(this, Orientation.DOWN, new DiscreteCoordinates(8, 10)));
+        registerActor(new Explosive(this, Orientation.DOWN, new DiscreteCoordinates(9, 10)));
         registerActor(new ManorDoor(this, Orientation.DOWN, new DiscreteCoordinates(6, 11),
                 new And(mazeChallenge, arenaChallenge), dialogHandler));
     }

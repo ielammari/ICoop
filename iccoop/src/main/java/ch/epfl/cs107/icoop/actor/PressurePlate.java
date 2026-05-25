@@ -13,7 +13,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class PressurePlate extends AreaEntity implements Logic {
+public final class PressurePlate extends AreaEntity implements Logic {
 
     private final Sprite sprite;
     private int activeTimer;

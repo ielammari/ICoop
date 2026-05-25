@@ -29,6 +29,7 @@ public abstract class Foe extends MovableAreaEntity {
     private final Animation vanishAnimation;
     private int immunityCounter;
     private State state;
+    private DiscreteCoordinates previousMainCell;
 
     protected Foe(Area owner, Orientation orientation, DiscreteCoordinates position,
                   int maxHP, List<DamageType> vulnerabilities) {
@@ -39,6 +40,7 @@ public abstract class Foe extends MovableAreaEntity {
         this.vanishAnimation = new Animation(VANISH_FRAME_DURATION, vanishSprites, false);
         this.immunityCounter = 0;
         this.state = State.ALIVE;
+        this.previousMainCell = position;
     }
 
     public void takeDamage(DamageType type, int amount) {
@@ -64,6 +66,12 @@ public abstract class Foe extends MovableAreaEntity {
             if (immunityCounter > 0) immunityCounter--;
             updateAlive(deltaTime);
             super.update(deltaTime);
+            DiscreteCoordinates current = getCurrentMainCellCoordinates();
+            if (!isDisplacementOccurs() && !current.equals(previousMainCell)) {
+                getOwnerArea().leaveAreaCells(this, Collections.singletonList(previousMainCell));
+                getOwnerArea().enterAreaCells(this, Collections.singletonList(current));
+                previousMainCell = current;
+            }
         } else if (state == State.DYING) {
             vanishAnimation.update(deltaTime);
             if (vanishAnimation.isCompleted()) {

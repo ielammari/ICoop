@@ -10,7 +10,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Arrays;
 import java.util.Random;
 
-public class HellSkull extends Foe {
+public final class HellSkull extends Foe {
 
     private static final int ANIMATION_DURATION = 4;
     private static final int MIN_FIRE_INTERVAL = 12;

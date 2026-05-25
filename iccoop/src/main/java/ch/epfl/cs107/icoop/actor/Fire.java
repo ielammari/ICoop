@@ -16,7 +16,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class Fire extends MovableAreaEntity implements Unstoppable, Interactor {
+public final class Fire extends MovableAreaEntity implements Unstoppable, Interactor {
 
     private static final int ANIMATION_DURATION = 3;
     private static final int FRAME_COUNT = 7;

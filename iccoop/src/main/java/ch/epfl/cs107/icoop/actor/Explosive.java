@@ -14,7 +14,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Arrays;
 import java.util.List;
 
-public class Explosive extends ICoopCollectable implements Interactor {
+public final class Explosive extends ICoopCollectable implements Interactor {
 
     private enum State { INACTIVE, ACTIVE, EXPLODING, DONE }
 

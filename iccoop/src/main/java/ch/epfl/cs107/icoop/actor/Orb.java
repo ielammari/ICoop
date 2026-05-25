@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Orb extends ElementalItem {
+public final class Orb extends ElementalItem {
 
     private static final int FRAME_COUNT = 6;
     private static final int FRAME_DURATION = 4;
