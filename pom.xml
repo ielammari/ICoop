@@ -9,6 +9,10 @@
     <version>2024</version>
     <packaging>pom</packaging>
 
+    <name>IC-CoOp</name>
+    <description>A 2D two-player co-op puzzle-and-combat game in Java. A fire player and a water player team up to clear elemental obstacles and reach the manor door.</description>
+    <url>https://github.com/ielammari/ICoop</url>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -18,7 +22,7 @@
     <modules>
         <module>iccoop</module>
         <module>game-engine</module>
-         <module>tutos</module>
+        <module>tutos</module>
     </modules>
 
 </project>

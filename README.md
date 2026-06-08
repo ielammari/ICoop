@@ -2,6 +2,9 @@
 
 A 2D tile-based, two-player cooperative game. Two characters, a fire (red) player and a water (blue) player, explore a set of grid areas, solve cooperative puzzles, fight enemies, and collect the items needed to open the final door. It runs on a `game-engine` library and renders through a Swing window. The base foundation (that engine plus the starter skeleton) comes from the EPFL CS-107 course project.
 
+## Preview
+![IC-CoOp preview](assets/preview.png)
+
 ## Requirements
 
 - **Java 21** (the project compiles with `maven.compiler.source`/`target` set to 21).
@@ -15,7 +18,7 @@ The project root is a Maven parent POM (`ch.epfl.cs107:mp2:2024`) with three mod
 
 - **`game-engine/`**: the pre-built engine library (do not modify). Provides `AreaGame`, `Area`, `AreaEntity`/`MovableAreaEntity`, the `Interactor`/`Interactable` interaction system, logic signals, math, and the Swing window.
 - **`iccoop/`**: the game itself (the main work in this project).
-- **`tutos/`**: tutorial examples showing engine usage patterns.
+- **`tutos/`**: standalone tutorial examples showing engine usage patterns. This module is reference material only and is not part of the IC-CoOp game; it can be ignored if you only want to build and play.
 
 ## Build
 
@@ -55,11 +58,13 @@ java -jar iccoop/target/IC-CoOp-2024-jar-with-dependencies.jar
 
 Open `iccoop/src/main/java/ch/epfl/cs107/Play.java` and run the `main` method.
 
-The game opens a 550x550 window and runs at 24 FPS.
+The game opens a 800x800 window and runs at 24 FPS.
 
-### Window position
+### Window configuration
 
-The game is fully playable as is. By default the window opens in the top-left corner of the screen. To make it appear in the middle instead, edit the engine file `game-engine/src/main/java/ch/epfl/cs107/play/window/swing/SwingWindow.java` and add `frame.setLocationRelativeTo(null);` just before `frame.setVisible(true);` in the constructor.
+The game is fully playable as is. By default, the window opens in the top-left corner of the screen. To make it appear in the middle instead, edit the engine file `game-engine/src/main/java/ch/epfl/cs107/play/window/swing/SwingWindow.java` and add `frame.setLocationRelativeTo(null);` just before `frame.setVisible(true);` in the constructor.
+
+The window size is configurable from `iccoop/src/main/java/ch/epfl/cs107/Play.java` by changing the `WINDOW_HEIGHT` and `WINDOW_WIDTH` constants (both default to 800).
 
 ## Code organization (`iccoop/src/main/java/ch/epfl/cs107/`)
 
